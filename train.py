@@ -38,7 +38,7 @@ augmentation_methods = [
     MonoModalRandomCropOut(crop_rate=0.3, prob_rgb=0.5, prob_thermal=0.0)]
 
 
-# 训练函数
+# train model
 def train(epo, model, train_loader, optimizer, batch_size):
     model.train()
 
@@ -88,7 +88,7 @@ def train(epo, model, train_loader, optimizer, batch_size):
         accIter['train'] = accIter['train'] + 1
 
 
-# 验证函数
+# validate model
 def validation(epo, model, val_loader):
     model.eval()
 
@@ -194,7 +194,7 @@ def testing(epo, model, test_loader):
     return miou
 
 
-# 主函数
+# main function to start
 if __name__ == '__main__':
     bn_eps = 1e-5
     bn_momentum = 0.1
@@ -247,7 +247,7 @@ if __name__ == '__main__':
     print(f'from epoch {args.epoch_from} / {args.epoch_max}')
     print(f'weight will be saved in: {weight_dir}')
 
-    # 准备数据集和数据加载器
+    # prepare for dataset
     train_dataset = MF_dataset(data_dir=args.data_dir, split='train', transform=augmentation_methods)
     val_dataset = MF_dataset(data_dir=args.data_dir, split='val')
     test_dataset = MF_dataset(data_dir=args.data_dir, split='test')
@@ -263,6 +263,7 @@ if __name__ == '__main__':
     accIter = {'train': 0, 'val': 0}
     testing_log = {"miou_idx": 0}
 
+    # start
     for epo in range(args.epoch_from, args.epoch_max):
         print(f'\ntrain {args.model_name}-{args.n_layer}, epo #{epo} begin...')
 
@@ -280,7 +281,7 @@ if __name__ == '__main__':
             checkpoint_model_file = os.path.join(weight_dir, 'best.pth')
             torch.save(model.state_dict(), checkpoint_model_file)
 
-
+        # Record pointer
         with open("log.txt", 'a') as f:
             f.write(
                 f"miou: {testing_log['miou']}  miou_idx: {testing_log['miou_idx']}\n")

@@ -2,6 +2,5 @@ mfnet_dataset/
 pst_dataset/
 *.log
 .idea
-img/
 runs/
 runs_pst/
