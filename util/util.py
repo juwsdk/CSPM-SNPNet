@@ -1,14 +1,9 @@
-# By Yuxiang Sun, Dec. 4, 2020
-# Email: sun.yuxiang@outlook.com
-
-import numpy as np 
 from PIL import Image
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
- 
+import numpy as np
 # 0:unlabeled, 1:car, 2:person, 3:bike, 4:curve, 5:car_stop, 6:guardrail, 7:color_cone, 8:bump 
 def get_palette():
     unlabelled = [0,0,0]
@@ -32,87 +27,6 @@ def visualize(image_name, predictions, weight_name,file='runs/vis_results/pred_'
             img[pred == cid] = palette[cid]
         img = Image.fromarray(np.uint8(img))
         img.save(file + weight_name + '_' + image_name[i] + '_' + name + '.png')
-
-# def compute_results(conf_total):
-#     n_class =  conf_total.shape[0]
-#     consider_unlabeled = True  # must consider the unlabeled, please set it to True
-#     if consider_unlabeled is True:
-#         start_index = 0
-#     else:
-#         start_index = 1
-#     precision_per_class = np.zeros(n_class)
-#     recall_per_class = np.zeros(n_class)
-#     iou_per_class = np.zeros(n_class)
-#     for cid in range(start_index, n_class):
-#         if conf_total[start_index:, cid].sum() == 0:
-#             precision_per_class[cid] =  np.nan
-#         else:
-#             precision_per_class[cid] = float(conf_total[cid, cid]) / float(conf_total[start_index:, cid].sum()) # precision = TP/TP+FP
-#         if conf_total[cid, start_index:].sum() == 0:
-#             recall_per_class[cid] = np.nan
-#         else:
-#             recall_per_class[cid] = float(conf_total[cid, cid]) / float(conf_total[cid, start_index:].sum()) # recall = TP/TP+FN
-#         if (conf_total[cid, start_index:].sum() + conf_total[start_index:, cid].sum() - conf_total[cid, cid]) == 0:
-#             iou_per_class[cid] = np.nan
-#         else:
-#             iou_per_class[cid] = float(conf_total[cid, cid]) / float((conf_total[cid, start_index:].sum() + conf_total[start_index:, cid].sum() - conf_total[cid, cid])) # IoU = TP/TP+FP+FN
-#
-#     return precision_per_class, recall_per_class, iou_per_class
-
-import numpy as np
-
-
-# def compute_results(conf_total):
-#     n_class = conf_total.shape[0]
-#     consider_unlabeled = True  # must consider the unlabeled, please set it to True
-#     if consider_unlabeled is True:
-#         start_index = 0
-#     else:
-#         start_index = 1
-#
-#     precision_per_class = np.zeros(n_class)
-#     recall_per_class = np.zeros(n_class)
-#     iou_per_class = np.zeros(n_class)
-#     accuracy_per_class = np.zeros(n_class)  # New array to store accuracy per class
-#
-#     total_tp = 0  # To calculate overall accuracy
-#     total_samples = conf_total.sum()  # Total number of samples
-#
-#     for cid in range(start_index, n_class):
-#         # Precision: TP / (TP + FP)
-#         if conf_total[start_index:, cid].sum() == 0:
-#             precision_per_class[cid] = np.nan
-#         else:
-#             precision_per_class[cid] = float(conf_total[cid, cid]) / float(conf_total[start_index:, cid].sum())
-#
-#         # Recall: TP / (TP + FN)
-#         if conf_total[cid, start_index:].sum() == 0:
-#             recall_per_class[cid] = np.nan
-#         else:
-#             recall_per_class[cid] = float(conf_total[cid, cid]) / float(conf_total[cid, start_index:].sum())
-#
-#         # IoU: TP / (TP + FP + FN)
-#         if (conf_total[cid, start_index:].sum() + conf_total[start_index:, cid].sum() - conf_total[cid, cid]) == 0:
-#             iou_per_class[cid] = np.nan
-#         else:
-#             iou_per_class[cid] = float(conf_total[cid, cid]) / float(
-#                 (conf_total[cid, start_index:].sum() + conf_total[start_index:, cid].sum() - conf_total[cid, cid]))
-#
-#         # Accuracy per class: TP / Total samples for class
-#         total_class_samples = conf_total[cid, :].sum()  # Total number of samples for this class
-#         if total_class_samples == 0:
-#             accuracy_per_class[cid] = np.nan  # If no samples for the class, set accuracy to NaN
-#         else:
-#             accuracy_per_class[cid] = float(conf_total[cid, cid]) / float(total_class_samples)
-#
-#         # Accumulate true positives for overall accuracy
-#         total_tp += conf_total[cid, cid]
-#
-#     # Calculate overall accuracy: Accuracy = TP / Total Samples
-#     accuracy = total_tp / total_samples if total_samples > 0 else np.nan
-#
-#     return precision_per_class, recall_per_class, iou_per_class, accuracy_per_class
-
 
 def compute_results(conf_total):
     n_class = conf_total.shape[0]

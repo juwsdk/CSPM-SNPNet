@@ -1,4 +1,5 @@
-import os, torch
+import os
+import torch
 from torch.utils.data.dataset import Dataset
 import numpy as np
 import PIL
