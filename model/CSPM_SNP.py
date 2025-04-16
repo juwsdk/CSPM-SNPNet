@@ -124,7 +124,7 @@ class CSPM_SNP(nn.Module):
 
         return pred_rgb, pred_thermal
 
-
+# ASPP Decoder
 class ASPP(nn.Module):
     def __init__(self, in_channels, out_channels, dilation_rates=(12, 24, 36), hidden_channels=256, norm_act=nn.BatchNorm2d, pooling_size=None):
         super(ASPP, self).__init__()
@@ -211,6 +211,7 @@ class SpatialGate(nn.Module):
         scale = torch.sigmoid(scale)
         return scale
 
+# ASSR Decoder
 class ASSR(nn.Module):
     def __init__(self, classify_classes, norm_act=nn.BatchNorm2d, bn_momentum=0.1):
         super(ASSR, self).__init__()
@@ -306,6 +307,7 @@ class BasicConv(nn.Module):
             x = self.relu(x)
         return x
 
+# Implementation of ConvSNP
 class SNPConv(nn.Module):
     def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1, groups=1, relu=True,
                  bn=True, bias=False):
@@ -392,6 +394,7 @@ class CrossSpatialGate(nn.Module):
         scale = torch.sigmoid(x2_out) # broadcasting
         return x1 * scale
 
+# Fusion Module
 class SCFLM(nn.Module):
     def __init__(self, channels, reduction_ratio=16, pool_types=['avg', 'max']):
         super(SCFLM, self).__init__()
